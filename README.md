@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/VAdamec/elk-stack-v5-xpack.svg?branch=master)](https://travis-ci.org/VAdamec/elk-stack-v5-xpack)
+
 # ELK stack sample setup on static IPs
 * https://github.com/VAdamec/elk-stack-v5-xpack 
 * Composer setup full ELK stack with XPack and plugins needed for workshop
