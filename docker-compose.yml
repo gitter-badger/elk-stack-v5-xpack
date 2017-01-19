@@ -1,0 +1,114 @@
+version: '2'
+
+services:
+  fluentd:
+    build: ./fluentd/
+    ports:
+      - "24224:5140"
+    networks:
+        app_net:
+          ipv4_address: ${NET}.10
+    extra_hosts:
+     - "elasticentry:172.22.0.20"
+
+  elasticsearchdataone:
+    build: elasticsearch/
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xms1g -Xmx1g -Dnode.data=true -Dnode.master=true"
+    networks:
+        app_net:
+          ipv4_address: ${NET}.20
+    volumes:
+      - ./volumes/elasticsearch:/usr/share/elasticsearch/data
+    extends:
+      file: common-services.yml
+      service: app
+
+  elasticsearchdatatwo:
+    build: elasticsearch/
+    ports:
+      - "9201:9200"
+      - "9301:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xms1g -Xmx1g -Dnode.data=true -Dnode.master=true"
+    networks:
+        app_net:
+          ipv4_address: ${NET}.30
+    volumes:
+      - ./volumes/elasticsearch2nd:/usr/share/elasticsearch/data
+    extends:
+      file: common-services.yml
+      service: app
+
+  elasticsearchmasterone:
+    build: elasticsearch/
+    ports:
+      - "9203:9200"
+      - "9303:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xms1g -Xmx1g -Dnode.data=true -Dnode.master=true"
+    networks:
+        app_net:
+          ipv4_address: ${NET}.31
+    volumes:
+      - ./volumes/elasticsearch3rd:/usr/share/elasticsearch/data
+    extends:
+      file: common-services.yml
+      service: app
+
+  logstash:
+    build: logstash/
+    command: -f /etc/logstash/conf.d/
+    volumes:
+      - ./logstash/config:/etc/logstash/conf.d
+      - ./logstash/templates:/etc/logstash/templates
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    networks:
+        app_net:
+          ipv4_address: ${NET}.21
+    depends_on:
+      - elasticsearchdataone
+    extends:
+      file: common-services.yml
+      service: app
+
+  kibana:
+    build: kibana/
+    volumes:
+      - ./kibana/config/:/etc/kibana/
+    ports:
+      - "5601:5601"
+    networks:
+        app_net:
+          ipv4_address: ${NET}.22
+    depends_on:
+      - elasticsearchdataone
+    extends:
+      file: common-services.yml
+      service: app
+
+  s3api:
+    build: riakcs/
+    environment:
+      RIAK_CS_BUCKETS: "s3backup"
+    ports:
+      - "8080:8080"
+    networks:
+        app_net:
+          ipv4_address: ${NET}.23
+
+networks:
+  app_net:
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "false"
+    ipam:
+      driver: default
+      config:
+      - subnet: ${SUBNET}
+        gateway: ${GATEWAY}

@@ -1,0 +1,17 @@
+network.host: 0.0.0.0
+node.name: ${HOSTNAME}
+path.repo: "/backup"
+xpack.security.audit.enabled: true
+xpack.security.audit.outputs: [index,logfile]
+discovery.zen.minimum_master_nodes: 2
+discovery.zen.ping.unicast.hosts:
+ - 172.22.0.20
+ - 172.22.0.30
+ - 172.22.0.31
+cloud.aws.s3.proxy.host: s3.amazonaws.dev
+cloud.aws.s3.proxy.port: 8080
+cloud.aws.s3.endpoint: s3.amazonaws.dev
+
+xpack.notification.slack.account.town.url: http://mattermost.demo.example.com/hooks/h4r5sc6t1p8bjknsqrfhdc496h
+xpack.notification.slack.account.party.url: http://mattermost.demo.example.com/hooks/zw31rdp48jgwze45d7zmzzgg6o
+xpack.notification.slack.account.monitoring.url: http://mattermost.demo.example.com/hooks/oeaonnsjaf87mmfxdafr6r7d7a

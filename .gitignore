@@ -1,0 +1,17 @@
+.DS_Store
+volumes/*
+*.swp
+.tags*
+Thumbs.db
+/.idea
+*.iml
+.terraform*
+.*swp
+terraform/.terraform*
+terraform/*.retry
+terraform/crash.log
+terraform/terraform.tfstate*
+terraform/*.pem
+*.pem
+terraform/variables.tf
+variables.tf

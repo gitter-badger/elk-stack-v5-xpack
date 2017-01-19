@@ -1,0 +1,23 @@
+version: '2'
+services:
+  app:
+    build: .
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: ${FLUENTDRIVER}
+        tag: "docker.elkmaster"
+    volumes:
+      - ./backup:/backup
+      - ./:/code
+    cpu_shares: 1024
+    # cpu_quota: 50000
+    cpuset: "0,1,2"
+    # mem_limit: 1000000000
+    # memswap_limit: 2000000000
+    # oom_score_adj: 500
+    extra_hosts:
+     - "elasticentry:172.22.0.20"
+     - "s3.amazonaws.dev:172.22.0.23"
+     - "mattermost.demo.example.com:172.22.0.250"
+
