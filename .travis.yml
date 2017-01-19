@@ -1,0 +1,20 @@
+language: ruby
+rvm:
+  - 2.2
+
+services:
+    - docker
+
+install:
+  - docker build -t fluentd fluentd/
+  - docker build -t elasticsearch elasticsearch/
+  - docker build -t logstash logstash/
+  - docker build -t kibana kibana/
+  - docker build -t riakcs riakcs/
+
+notifications:
+  email:
+    recipients:
+      - v.adamec@seznam.cz
+    on_success: always
+    on_failure: always
